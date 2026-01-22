@@ -1,0 +1,12 @@
+-- CreateTable
+CREATE TABLE "EmailQueue" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "to" TEXT NOT NULL,
+    "subject" TEXT NOT NULL,
+    "body" TEXT NOT NULL,
+    "bulan" TEXT NOT NULL,
+    "tahun" TEXT NOT NULL,
+    "sendAt" DATETIME NOT NULL,
+    "status" TEXT NOT NULL DEFAULT 'PENDING',
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react"; // 1. Tambah useCallback
+import { useState, useEffect, useCallback } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { Navbar } from "../components/Navbar/page";
 import Space from "../components/atoms/Space/page";
@@ -14,13 +14,12 @@ export default function WhatsappPage() {
     message: "",
     number:"",
   });
-  // 2. Bungkus fungsi checkStatus dengan useCallback
+  
   const checkStatus = useCallback(async () => {
     try {
       const res = await fetch("http://localhost:3001/status");
       const data = await res.json();
 
-      // Kita update state hanya jika ada perubahan (Optional optimization)
       setStatus(data.status);
       setQrCode(data.qr);
       setIsLoading(false);

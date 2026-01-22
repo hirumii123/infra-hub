@@ -14,7 +14,18 @@ model EmailQueue {
   to        String
   subject   String
   body      String
+  bulan     String
+  tahun     String
   sendAt    DateTime
   status    String   @default("PENDING") //SENT - PENDING - FAILED
+  createdAt DateTime @default(now())
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String?
+  password  String
+  role      String   @default("USER") // ADMIN - USER
   createdAt DateTime @default(now())
 }

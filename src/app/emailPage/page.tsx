@@ -8,22 +8,51 @@ type EmailJob = {
   to: string;
   subject: string;
   body: string;
+  bulan: string;
+  tahun: string;
   sendAt: string;
   status: string;
 };
 
 export default function EmailPage() {
+  const daftarBulan = [
+    "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember",
+  ];
+
+  const daftarTahun = [2026, 2027, 2028, 2029, 2030];
+
   const [formData, setFormData] = useState({
     to: "support@harrismaindonesia.com",
-    subject: "Request LogBook Activity ke datacenter, Rack 1a0212 Tahun 2026",
+    subject: "Request LogBook Activity ke datacenter, Rack 1a0212",
     body: "",
+    bulan: "",
+    tahun: "",
     sendAt: "",
   });
+
+  useEffect(() => {
+    if (formData.bulan && formData.tahun) {
+      setFormData((prev) => ({
+        ...prev,
+        subject: `Request LogBook Activity ke datacenter, Rack 1a0212 Periode ${prev.bulan} Tahun ${prev.tahun}`,
+      }));
+    }
+  }, [formData.bulan, formData.tahun]);
 
   const [history, setHistory] = useState<EmailJob[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // 1. FUNGSI KHUSUS UNTUK LOAD DATA (DIPISAH SUPAYA AMAN)
   const loadData = async () => {
     try {
       const res = await fetch("/api/history");
@@ -40,17 +69,16 @@ export default function EmailPage() {
     loadData();
 
     const intervalId = setInterval(() => {
-    console.log("⏰ Auto-trigger Cron...");
-    
-    //panggil cron
-    fetch('/api/cron')
-      .then(res => res.json())
-      .then(data => {
-        console.log("Hasil Cron:", data);
-        loadData();
-      });
-      
-  }, 60000);
+      console.log("⏰ Auto-trigger Cron...");
+
+      //panggil cron
+      fetch("/api/cron")
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("Hasil Cron:", data);
+          loadData();
+        });
+    }, 60000);
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -96,11 +124,6 @@ export default function EmailPage() {
     return "bg-yellow-100 text-yellow-800 border-yellow-200";
   };
 
-  const daftarBulan = [
-    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-  ];
-
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800">
       <Navbar />
@@ -115,7 +138,8 @@ export default function EmailPage() {
             <form onSubmit={handleSubmit} className="space-y-3">
               <div>
                 <label className="text-xs font-bold text-slate-500 ">
-                  Kirim Ke (Jika ingin mengirim lebih dari 1 penerima, pisahkan dengan koma) | Contoh: hilmy@ainosi.com, pasky@ainosi.com
+                  Kirim Ke (Jika penerima lebih dari 1, pisahkan
+                  dengan koma). Contoh: hilmy@ainosi.com, nadia@ainosi.com
                 </label>
                 <input
                   type="email"
@@ -135,13 +159,12 @@ export default function EmailPage() {
                 </label>
                 <input
                   type="text"
-                  required
-                  className="w-full mt-1 p-2 border rounded text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                  disabled
+                  className="w-full mt-1 p-2 border rounded text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-slate-300"
                   value={formData.subject}
                   onChange={(e) =>
                     setFormData({ ...formData, subject: e.target.value })
                   }
-
                 />
               </div>
 
@@ -152,15 +175,40 @@ export default function EmailPage() {
                 <select
                   required
                   className="w-full mt-1 p-2 border rounded text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white"
-                  value={formData.body} 
+                  value={formData.bulan}
                   onChange={(e) =>
-                    setFormData({ ...formData, body: e.target.value })
+                    setFormData({ ...formData, bulan: e.target.value })
                   }
                 >
-                  <option value="" disabled>Pilih Bulan</option>
+                  <option value="" disabled>
+                    Pilih Bulan
+                  </option>
                   {daftarBulan.map((bulan, index) => (
                     <option key={index} value={bulan}>
                       {bulan}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-500">
+                  Tahun
+                </label>
+                <select
+                  required
+                  className="w-full mt-1 p-2 border rounded text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+                  value={formData.tahun}
+                  onChange={(e) =>
+                    setFormData({ ...formData, tahun: e.target.value })
+                  }
+                >
+                  <option value="" disabled>
+                    Pilih Tahun
+                  </option>
+                  {daftarTahun.map((tahun, index) => (
+                    <option key={index} value={tahun}>
+                      {tahun}
                     </option>
                   ))}
                 </select>
@@ -198,12 +246,12 @@ export default function EmailPage() {
               <h2 className="font-bold text-lg text-slate-700">
                 Riwayat Pengiriman Email
               </h2>
-              <button
+              {/* <button
                 onClick={loadData}
                 className="text-sm px-3 py-1 bg-white border rounded hover:bg-slate-50 transition text-slate-600 flex items-center gap-1"
               >
                 Refresh Data
-              </button>
+              </button> */}
             </div>
 
             <div className="overflow-y-auto">
@@ -214,6 +262,7 @@ export default function EmailPage() {
                     <th className="p-4 font-semibold">Tujuan</th>
                     <th className="p-4 font-semibold">Jadwal Kirim</th>
                     <th className="p-4 font-semibold">Bulan</th>
+                    <th className="p-4 font-semibold">Tahun</th>
                     <th className="p-4 font-semibold">Aksi</th>
                   </tr>
                 </thead>
@@ -252,7 +301,10 @@ export default function EmailPage() {
                           })}
                         </td>
                         <td className="p-4 text-slate-500 max-w-xs truncate">
-                          {job.body}
+                          {job.bulan}
+                        </td>
+                        <td className="p-4 text-slate-500 max-w-xs truncate">
+                          {job.tahun}
                         </td>
                         <td className="p-4">
                           <button

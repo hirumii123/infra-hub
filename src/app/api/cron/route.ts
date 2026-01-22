@@ -48,7 +48,7 @@ export async function GET() {
         `<p>
         Dengan hormat, <br>
         Semoga Bapak/Ibu dalam keadaan baik. <br><br>
-        Email ini kami sampaikan sebagai Pengajuan LogBook Activity ke Datacenter, Rack 1a0212 Periode ${job.body} Tahun 2026.
+        Email ini kami sampaikan sebagai Pengajuan LogBook Activity ke Datacenter, Rack 1a0212 Periode ${job.bulan} Tahun ${job.tahun}.
         <br><br>
         Kami mohon kesediaannya untuk dapat segera menyampaikan laporan dimaksud.
         Laporan ini kami perlukan sebagai bagian dari proses evaluasi dan dokumentasi internal.
