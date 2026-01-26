@@ -1,0 +1,40 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  // url      = env("DATABASE_URL")
+}
+
+model EmailQueue {
+  id        Int      @id @default(autoincrement())
+  to        String
+  subject   String
+  body      String
+  bulan     String
+  tahun     String
+  sendAt    DateTime
+  status    String   @default("PENDING") //SENT - PENDING - FAILED
+  createdAt DateTime @default(now())
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String?
+  password  String
+  role      String   @default("USER") // ADMIN - USER
+  createdAt DateTime @default(now())
+}
+
+model WhatsappLog {
+  id        Int      @id @default(autoincrement())
+  target    String   // Nomor HP atau ID Grup
+  message   String // Pakai Text biar muat pesan panjang
+  status    String   // "Terkirim", "Dijadwalkan", "Gagal"
+  sendAt    DateTime @default(now()) // Waktu dikirim/dijadwalkan
+  createdAt DateTime @default(now())
+}
