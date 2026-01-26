@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { QRCodeSVG } from "qrcode.react";
-import { Navbar } from "../components/Navbar/page";
+import { Navbar } from "../components/molecules/Navbar";
 import Space from "../components/atoms/Space/page";
 
 export default function WhatsappPage() {  
@@ -15,6 +15,7 @@ export default function WhatsappPage() {
     "personal",
   );
   const [groups, setGroups] = useState<{ id: string; name: string }[]>([]);
+  const API_BASE = process.env.NEXT_PUBLIC_WA_API_BASE_URL || "http://localhost:3001";
 
   const daftarBulan = [
     "Januari",
@@ -75,7 +76,7 @@ p. +62 21 290 69 516 | f. +62 21 290 69 516`,
 
   const checkStatus = useCallback(async () => {
     try {
-      const res = await fetch("http://localhost:3001/status");
+      const res = await fetch(`${API_BASE}/status`);
       const data = await res.json();
 
       setStatus(data.status);
@@ -98,7 +99,7 @@ p. +62 21 290 69 516 | f. +62 21 290 69 516`,
   useEffect(() => {
     const fetchGroups = async () => {
       try {
-        const res = await fetch("http://localhost:3001/groups");
+        const res = await fetch(`${API_BASE}/groups`);
         const result = await res.json();
         if (result.status === "success") {
           setGroups(result.data);
@@ -121,7 +122,7 @@ p. +62 21 290 69 516 | f. +62 21 290 69 516`,
 
     setIsSending(true);
     try {
-      const res = await fetch("http://localhost:3001/send-message", {
+      const res = await fetch(`${API_BASE}/send-message`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -156,7 +157,7 @@ p. +62 21 290 69 516 | f. +62 21 290 69 516`,
 
     setIsResetting(true);
     try {
-      const res = await fetch("http://localhost:3001/logout", {
+      const res = await fetch(`${API_BASE}/logout`, {
         method: "POST"
       });
       const data = await res.json();

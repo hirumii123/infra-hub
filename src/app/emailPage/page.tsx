@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Navbar } from "../components/Navbar/page";
+import { Navbar } from "../components/molecules/Navbar";
 import Space from "../components/atoms/Space/page";
 
 type EmailJob = {

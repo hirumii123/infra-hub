@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Navbar } from "@/app/components/Navbar/page";
+import { Navbar } from "@/app/components/molecules/Navbar";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({

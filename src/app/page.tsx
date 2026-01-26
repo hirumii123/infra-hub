@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Navbar } from "./components/Navbar/page";
+import { Navbar } from "./components/molecules/Navbar";
 
 export default function HomePage() {
   return (
