@@ -1,16 +1,13 @@
-// src/app/api/schedule/route.ts
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 export async function POST(req: Request) {
   try {
     const { to, subject, body, sendAt, bulan, tahun } = await req.json();
 
-    // Validasi input
     if (!to || !subject || !sendAt || !bulan || !tahun) {
       return NextResponse.json({ error: 'Data tidak lengkap' }, { status: 400 });
     }
 
-    // Simpan ke Database
     const newJob = await prisma.emailQueue.create({
       data: {
         to,

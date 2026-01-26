@@ -18,7 +18,6 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Email dan Password wajib diisi");
         }
 
-        // 1. Cari user
         const user = await prisma.user.findUnique({
           where: { email: credentials.email }
         });
@@ -27,16 +26,14 @@ export const authOptions: NextAuthOptions = {
           throw new Error("User tidak ditemukan");
         }
 
-        // 2. Cek password
         const isPasswordValid = await compare(credentials.password, user.password);
 
         if (!isPasswordValid) {
           throw new Error("Password salah");
         }
 
-        // 3. Return user (sesuai interface User di next-auth.d.ts)
         return {
-          id: user.id.toString(), // Convert Int ke String
+          id: user.id.toString(),
           email: user.email,
           name: user.name,
           role: user.role,
@@ -45,7 +42,6 @@ export const authOptions: NextAuthOptions = {
     })
   ],
   callbacks: {
-    // Memasukkan data user ke dalam Token JWT
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
@@ -53,7 +49,6 @@ export const authOptions: NextAuthOptions = {
       }
       return token;
     },
-    // Memasukkan data dari Token ke Session (biar bisa diakses di frontend)
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id;

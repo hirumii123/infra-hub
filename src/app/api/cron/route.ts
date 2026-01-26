@@ -79,7 +79,7 @@ export async function GET() {
           html: finalBody,
         });
 
-        console.log(`✅ Sukses kirim ke ${job.to}`);
+        console.log(`Sukses kirim ke ${job.to}`);
         
         await prisma.emailQueue.update({
           where: { id: job.id },
@@ -88,7 +88,7 @@ export async function GET() {
         results.push({ id: job.id, status: 'SENT' });
 
       } catch (err) {
-        console.error("❌ ERROR NODEMAILER:", err); 
+        console.error("ERROR NODEMAILER:", err); 
         
         await prisma.emailQueue.update({
           where: { id: job.id },

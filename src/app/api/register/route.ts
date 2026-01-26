@@ -9,12 +9,10 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { email, name, password } = body;
 
-    // Validasi sederhana
     if (!email || !password) {
       return NextResponse.json({ message: "Data tidak lengkap" }, { status: 400 });
     }
 
-    // Cek apakah email sudah ada
     const existingUser = await prisma.user.findUnique({
       where: { email: email }
     });
@@ -23,16 +21,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: "Email sudah terdaftar" }, { status: 409 });
     }
 
-    // Hash password
     const hashedPassword = await hash(password, 10);
 
-    // Create User
     await prisma.user.create({
       data: {
         email,
         name,
         password: hashedPassword,
-        role: "user" // Default role
+        role: "user"
       }
     });
 

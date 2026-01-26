@@ -69,9 +69,8 @@ export default function EmailPage() {
     loadData();
 
     const intervalId = setInterval(() => {
-      console.log("⏰ Auto-trigger Cron...");
+      console.log("Cron triggered");
 
-      //panggil cron
       fetch("/api/cron")
         .then((res) => res.json())
         .then((data) => {
@@ -92,11 +91,11 @@ export default function EmailPage() {
     });
 
     if (res.ok) {
-      alert("✅ Berhasil dijadwalkan!");
+      alert("Berhasil dijadwalkan!");
       setFormData({ ...formData, body: "", subject: "" });
-      loadData(); // Panggil manual setelah simpan
+      loadData();
     } else {
-      alert("❌ Gagal menyimpan.");
+      alert("Gagal menyimpan.");
     }
     setLoading(false);
   };
@@ -111,7 +110,7 @@ export default function EmailPage() {
     });
 
     if (res.ok) {
-      loadData(); // Refresh tabel setelah hapus
+      loadData(); 
     } else {
       alert("Gagal menghapus");
     }
@@ -246,12 +245,6 @@ export default function EmailPage() {
               <h2 className="font-bold text-lg text-slate-700">
                 Riwayat Pengiriman Email
               </h2>
-              {/* <button
-                onClick={loadData}
-                className="text-sm px-3 py-1 bg-white border rounded hover:bg-slate-50 transition text-slate-600 flex items-center gap-1"
-              >
-                Refresh Data
-              </button> */}
             </div>
 
             <div className="overflow-y-auto">

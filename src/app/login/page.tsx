@@ -6,7 +6,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Suspense } from 'react';
 
-// Kita pisahkan form ke dalam komponen sendiri agar support Suspense
 function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -26,16 +25,15 @@ function LoginForm() {
     const res = await signIn("credentials", {
       email,
       password,
-      redirect: false, // Kita handle redirect sendiri
+      redirect: false, 
     });
 
     if (res?.error) {
       setError("Email atau Password Salah!");
       setIsLoading(false);
     } else {
-      // Redirect ke halaman asal atau dashboard
       router.push(callbackUrl);
-      router.refresh(); // Refresh agar session terupdate di seluruh aplikasi
+      router.refresh();
     }
   };
 

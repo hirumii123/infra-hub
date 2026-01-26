@@ -37,7 +37,6 @@ export default function HomePage() {
               Kirim Email
             </Link>
 
-            {/* Tombol Sekunder */}
             <Link
               href="/whatsappPage"
               className="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm outline-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
@@ -47,7 +46,6 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-      {/* === HERO SECTION SELESAI === */}
     </div>
   );
 }

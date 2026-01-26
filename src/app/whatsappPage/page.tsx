@@ -5,15 +5,12 @@ import { QRCodeSVG } from "qrcode.react";
 import { Navbar } from "../components/Navbar/page";
 import Space from "../components/atoms/Space/page";
 
-export default function WhatsappPage() {
-  // --- STATE MANAGEMENT ---
-  
+export default function WhatsappPage() {  
   const [status, setStatus] = useState("disconnected");
   const [qrCode, setQrCode] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSending, setIsSending] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
-  // State untuk Pilihan (Personal / Group)
   const [targetType, setTargetType] = useState<"personal" | "group">(
     "personal",
   );
@@ -35,8 +32,6 @@ export default function WhatsappPage() {
   ];
 
   const daftarTahun = [2026, 2027, 2028, 2029, 2030];
-
-  // State Form Data
   const [formData, setFormData] = useState({
     number: "",
     sendAt: "",
@@ -78,7 +73,6 @@ p. +62 21 290 69 516 | f. +62 21 290 69 516`,
     }
   }, [formData.bulan, formData.tahun]);
 
-  // --- LOGIC: CEK STATUS WA ---
   const checkStatus = useCallback(async () => {
     try {
       const res = await fetch("http://localhost:3001/status");
@@ -119,7 +113,6 @@ p. +62 21 290 69 516 | f. +62 21 290 69 516`,
     }
   }, [status]);
 
-  // --- LOGIC: KIRIM PESAN ---
   const handleTestSend = async () => {
     if (!formData.number) {
       alert("❌ Harap isi nomor tujuan atau pilih grup!");
@@ -143,24 +136,23 @@ p. +62 21 290 69 516 | f. +62 21 290 69 516`,
       if (result.status === "success") {
         if (formData.sendAt) {
           alert(
-            `✅ Pesan berhasil dijadwalkan untuk: ${new Date(formData.sendAt).toLocaleString()}`,
+            `Pesan berhasil dijadwalkan untuk: ${new Date(formData.sendAt).toLocaleString()}`,
           );
         } else {
-          alert("✅ Pesan berhasil terkirim ke Whatsapp!");
+          alert("Pesan berhasil terkirim ke Whatsapp!");
         }
-        // Reset form (kecuali tipe target)
         setFormData({ ...formData, message: "", number: "", sendAt: "" });
       } else {
-        alert("❌ Gagal: " + result.message);
+        alert("Gagal: " + result.message);
       }
     } catch (error) {
-      alert("❌ Error: Server WA mati atau tidak bisa dihubungi.");
+      alert("Error: Server WA mati atau tidak bisa dihubungi.");
     }
     setIsSending(false);
   };
 
   const handleLogout = async () => {
-    if (!confirm("⚠️ Yakin ingin menghapus sesi? Bot akan mati dan minta scan QR ulang.")) return;
+    if (!confirm("Yakin ingin menghapus sesi? Bot akan mati dan minta scan QR ulang.")) return;
 
     setIsResetting(true);
     try {
@@ -170,15 +162,15 @@ p. +62 21 290 69 516 | f. +62 21 290 69 516`,
       const data = await res.json();
       
       if (data.status === "success") {
-        alert("✅ Sesi berhasil dihapus! Tunggu QR Code baru muncul...");
+        alert("Sesi berhasil dihapus! Tunggu QR Code baru muncul...");
         setStatus("disconnected");
         setQrCode(null);
         setGroups([]);
       } else {
-        alert("❌ Gagal: " + data.message);
+        alert("Gagal: " + data.message);
       }
     } catch (error) {
-      alert("❌ Gagal menghubungi server");
+      alert("Gagal menghubungi server");
     }
     setIsResetting(false);
   };
@@ -188,7 +180,6 @@ p. +62 21 290 69 516 | f. +62 21 290 69 516`,
       <Navbar />
       <Space />
       <div className="bg-white p-6 rounded-xl shadow-md border max-w-5xl mx-auto space-y-8 px-4 md:px-0">
-        {/* --- STATUS: SERVER MATI --- */}
         <div className="flex justify-end px-4">
             <button 
                 onClick={handleLogout} 
@@ -205,7 +196,6 @@ p. +62 21 290 69 516 | f. +62 21 290 69 516`,
           </div>
         )}
 
-        {/* --- STATUS: MENUNGGU QR --- */}
         {status === "disconnected" && !qrCode && (
           <div className="text-gray-500 text-center py-10">
             <div className="animate-pulse">
@@ -214,7 +204,6 @@ p. +62 21 290 69 516 | f. +62 21 290 69 516`,
           </div>
         )}
 
-        {/* --- STATUS: SCANNING QR --- */}
         {status === "scanning" && qrCode && (
           <div className="flex flex-col items-center animate-in fade-in">
             <p className="mb-4 text-sm text-gray-600 font-medium">
@@ -226,14 +215,12 @@ p. +62 21 290 69 516 | f. +62 21 290 69 516`,
           </div>
         )}
 
-        {/* --- STATUS: TERHUBUNG (FORM UTAMA) --- */}
         {status === "connected" && (
           <div className="text-gray-800 flex flex-col px-6 animate-in fade-in zoom-in">
             <h2 className="text-xl font-bold text-center text-green-600 mb-6">
-              ✅ Terhubung! Kirim Pesan
+              ✅ Whatsapp Terhubung!
             </h2>
 
-            {/* 1. TOMBOL PILIHAN (Personal vs Group) */}
             <div className="flex justify-center gap-4 mb-6">
               <button
                 onClick={() => {
@@ -246,7 +233,7 @@ p. +62 21 290 69 516 | f. +62 21 290 69 516`,
                     : "bg-gray-100 text-gray-500 hover:bg-gray-200"
                 }`}
               >
-                👤 Personal
+                👤 Pribadi
               </button>
               <button
                 onClick={() => {
@@ -263,7 +250,6 @@ p. +62 21 290 69 516 | f. +62 21 290 69 516`,
               </button>
             </div>
 
-            {/* 2. INPUT TUJUAN (Dinamis: Input Text atau Dropdown) */}
             <div className="mb-4">
               <label className="text-xs font-bold text-slate-500 block mb-1">
                 {targetType === "personal"
@@ -290,7 +276,7 @@ p. +62 21 290 69 516 | f. +62 21 290 69 516`,
                     setFormData({ ...formData, number: e.target.value })
                   }
                 >
-                  <option value="">-- Pilih Grup Tujuan --</option>
+                  <option value="">Pilih Grup Tujuan</option>
                   {groups.length > 0 ? (
                     groups.map((g) => (
                       <option key={g.id} value={g.id}>
@@ -298,7 +284,7 @@ p. +62 21 290 69 516 | f. +62 21 290 69 516`,
                       </option>
                     ))
                   ) : (
-                    <option disabled>Mengambil data grup...</option>
+                    <option disabled>Mengambil data grup</option>
                   )}
                 </select>
               )}
@@ -350,7 +336,6 @@ p. +62 21 290 69 516 | f. +62 21 290 69 516`,
                 </select>
               </div>
 
-            {/* 3. INPUT TANGGAL (Jadwal) */}
             <div className="mb-4">
               <label className="text-xs font-bold text-slate-500 block">
                 Waktu Pengiriman (Opsional)
@@ -368,7 +353,6 @@ p. +62 21 290 69 516 | f. +62 21 290 69 516`,
               />
             </div>
 
-            {/* 4. INPUT PESAN */}
             <div className="mb-6">
               <label className="text-xs font-bold text-slate-500 block mb-1">
                 Pesan Whatsapp
