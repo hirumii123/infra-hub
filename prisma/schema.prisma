@@ -29,3 +29,12 @@ model User {
   role      String   @default("USER") // ADMIN - USER
   createdAt DateTime @default(now())
 }
+
+model WhatsappLog {
+  id        Int      @id @default(autoincrement())
+  target    String   // Nomor HP atau ID Grup
+  message   String // Pakai Text biar muat pesan panjang
+  status    String   // "Terkirim", "Dijadwalkan", "Gagal"
+  sendAt    DateTime @default(now()) // Waktu dikirim/dijadwalkan
+  createdAt DateTime @default(now())
+}
