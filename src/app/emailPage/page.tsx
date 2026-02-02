@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { Navbar } from "../components/molecules/Navbar";
 import Space from "../components/atoms/Space/page";
+import { useRouter } from "next/navigation";
 
 type EmailJob = {
   id: number;
@@ -15,6 +16,8 @@ type EmailJob = {
 };
 
 export default function EmailPage() {
+  const router = useRouter();
+
   const daftarBulan = [
     "Januari",
     "Februari",
