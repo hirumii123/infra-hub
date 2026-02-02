@@ -1,26 +1,22 @@
-import "dotenv/config";
 import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '@prisma/client';
 
-const connectionString = `${process.env.DATABASE_URL}`;
+const connectionString = process.env.DATABASE_URL;
 
-// 1. Inisialisasi Pool dan Adapter sesuai docs Prisma 7
 const pool = new Pool({ connectionString });
 const adapter = new PrismaPg(pool);
 
-// 2. Gunakan pola Singleton agar tidak "Too many connections" di Next.js
-const globalForPrisma = global as unknown as { prisma: PrismaClient };
+const prismaClientSingleton = () => {
+  return new PrismaClient({ adapter });
+};
 
-export const prisma =
-  globalForPrisma.prisma ||
-  new PrismaClient({ 
-    adapter,
-    log: ['query', 'info', 'warn', 'error'] 
-  });
+declare global {
+  var prismaGlobal: undefined | ReturnType<typeof prismaClientSingleton>;
+}
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
+const prisma = globalThis.prismaGlobal ?? prismaClientSingleton();
 
-// 3. WAJIB: Tambahkan export default untuk memperbaiki error build
-// Ini supaya "import prisma from '@/lib/prisma'" di file API Anda bisa jalan
 export default prisma;
+
+if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma;
