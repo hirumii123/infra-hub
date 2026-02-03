@@ -16,6 +16,25 @@ export default function WhatsappPage() {
   );
   const [groups, setGroups] = useState<{ id: string; name: string }[]>([]);
   const API_BASE = process.env.NEXT_PUBLIC_WA_API_BASE_URL || "http://localhost:3001";
+  const [logs, setLogs] = useState<any[]>([]);
+  const [isFetchingLogs, setIsFetchingLogs] = useState(false);
+const fetchLogs = useCallback(async () => {
+  setIsFetchingLogs(true);
+  try {
+    const res = await fetch("/api/history"); // Pastikan path API ini benar
+    const data = await res.json();
+    setLogs(data);
+  } catch (error) {
+    console.error("Gagal mengambil log:", error);
+  } finally {
+    setIsFetchingLogs(false);
+  }
+}, []);
+
+// Panggil saat pertama kali halaman dimuat
+useEffect(() => {
+  fetchLogs();
+}, [fetchLogs]);
 
   const daftarBulan = [
     "Januari",
@@ -387,6 +406,7 @@ p. +62 21 290 69 516 | f. +62 21 290 69 516`,
                 <>🚀 Kirim Sekarang</>
               )}
             </button>
+            
           </div>
         )}
       </div>
