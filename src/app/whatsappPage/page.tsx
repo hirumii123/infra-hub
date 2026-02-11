@@ -67,12 +67,14 @@ useEffect(() => {
         message: `Yth. Bapak Ibu Tim Harrisma,
 
 Semoga Bapak/Ibu dalam keadaan baik.
-Email ini kami sampaikan sebagai Pengajuan LogBook Activity ke Datacenter, Rack 1a0212 Periode ${formData.bulan} Tahun ${formData.tahun}.
+Melalui email ini, kami bermaksud menyampaikan pengajuan terkait LogBook Activity serta SLA Report ke Datacenter, untuk penggunaan Rack 1a0212 Periode ${formData.bulan} Tahun ${formData.tahun}.
 
-Kami mohon kesediaannya untuk dapat segera menyampaikan laporan dimaksud.
-Laporan ini kami perlukan sebagai bagian dari proses evaluasi dan dokumentasi internal.
+Sehubungan dengan hal tersebut, kami memohon kesediaan Bapak/Ibu untuk dapat mengirimkan laporan dimaksud dalam waktu dekat.
+Dokumen laporan tersebut kami perlukan sebagai bagian dari proses evaluasi dan dokumentasi internal.
 
-Atas perhatian dan kerja samanya, kami ucapkan terima kasih.
+*Apabila Bapak/Ibu telah mengirimkan laporan tersebut sebelumnya, mohon kiranya pesan ini dapat diabaikan.*
+
+Demikian permohonan ini kami sampaikan. Atas perhatian, bantuan, dan kerja sama yang baik, kami ucapkan terima kasih.
 
 Hormat kami,
 Tim Kolektif Laporan

@@ -37,7 +37,7 @@ export default function EmailPage() {
 
   const [formData, setFormData] = useState({
     to: "support@harrismaindonesia.com",
-    subject: "Request LogBook Activity ke datacenter, Rack 1a0212",
+    subject: "Request LogBook Activity dan SLA Report ke datacenter, Rack 1a0212",
     body: "",
     bulan: "",
     tahun: "",
@@ -48,7 +48,7 @@ export default function EmailPage() {
     if (formData.bulan && formData.tahun) {
       setFormData((prev) => ({
         ...prev,
-        subject: `Request LogBook Activity ke datacenter, Rack 1a0212 Periode ${prev.bulan} Tahun ${prev.tahun}`,
+        subject: `Request LogBook Activity dan Report SLA ke datacenter, Rack 1a0212 Periode ${prev.bulan} Tahun ${prev.tahun}`,
       }));
     }
   }, [formData.bulan, formData.tahun]);
