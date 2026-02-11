@@ -6,9 +6,35 @@ import Link from "next/link";
 export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const handleStartServer = async () => {
+  try {
+    const response = await fetch("/api/start-wa", { method: "POST" });
+
+    // 1. Ambil teks dulu, jangan langsung .json()
+    const text = await response.text(); 
+    
+    // 2. Coba ubah ke JSON jika memungkinkan
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      data = { message: text };
+    }
+
+    if (!response.ok) {
+      throw new Error(data.message || "Server Error");
+    }
+
+    alert("WhatsApp Server Berhasil Dinyalakan!");
+  } catch (err) {
+    console.error("Detail Error:", err);
+    alert("Gagal: " + err.message);
+  }
+};
 
   return (
-    <nav className="relative bg-gray-800 z-50"> 
+    <nav className="relative bg-gray-800 z-50">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -19,13 +45,33 @@ export const Navbar = () => {
             >
               <span className="sr-only">Open main menu</span>
               {isMobileMenuOpen ? (
-                 <svg className="block h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                 </svg>
+                <svg
+                  className="block h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
               ) : (
-                 <svg className="block h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-                   <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                 </svg>
+                <svg
+                  className="block h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                  />
+                </svg>
               )}
             </button>
           </div>
@@ -52,10 +98,18 @@ export const Navbar = () => {
                 </Link>
               </div>
             </div>
+            <button
+              onClick={handleStartServer}
+              disabled={isLoading}
+              className={`${
+                isLoading ? "bg-gray-500" : "bg-green-500 hover:bg-blue-700"
+              } text-white text-sm py-2 px-4 rounded transition-colors`}
+            >
+              {isLoading ? "Memproses..." : "Aktifkan Backend"}
+            </button>
           </div>
         </div>
       </div>
-
     </nav>
   );
 };
