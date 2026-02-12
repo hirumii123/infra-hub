@@ -29,7 +29,7 @@ export const Navbar = () => {
     alert("WhatsApp Server Berhasil Dinyalakan!");
   } catch (err) {
     console.error("Detail Error:", err);
-    alert("Gagal: " + err.message);
+    alert("Gagal: " + err);
   }
 };
 
