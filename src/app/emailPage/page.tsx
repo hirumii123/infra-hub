@@ -37,7 +37,8 @@ export default function EmailPage() {
 
   const [formData, setFormData] = useState({
     to: "support@harrismaindonesia.com",
-    subject: "Request LogBook Activity dan SLA Report ke datacenter, Rack 1a0212",
+    subject:
+      "Request LogBook Activity dan SLA Report ke datacenter, Rack 1a0212",
     body: "",
     bulan: "",
     tahun: "",
@@ -46,9 +47,26 @@ export default function EmailPage() {
 
   useEffect(() => {
     if (formData.bulan && formData.tahun) {
+      const templateBody = `Yth. Bapak Ibu Tim Harrisma,
+
+Semoga Bapak/Ibu dalam keadaan baik.
+Melalui email ini, kami bermaksud menyampaikan pengajuan terkait LogBook Activity serta SLA Report ke Datacenter, untuk penggunaan Rack 1a0212 Periode ${formData.bulan} Tahun ${formData.tahun}.
+
+Sehubungan dengan hal tersebut, kami memohon kesediaan Bapak/Ibu untuk dapat mengirimkan laporan dimaksud dalam waktu dekat.
+Dokumen laporan tersebut kami perlukan sebagai bagian dari proses evaluasi dan dokumentasi internal.
+
+*Apabila Bapak/Ibu telah mengirimkan laporan tersebut sebelumnya, mohon kiranya pesan ini dapat diabaikan.*
+
+Demikian permohonan ini kami sampaikan. Atas perhatian, bantuan, dan kerja sama yang baik, kami ucapkan terima kasih.
+
+Hormat kami,
+Tim Kolektif Laporan
+PT. AINO Indonesia`;
+
       setFormData((prev) => ({
         ...prev,
         subject: `Request LogBook Activity dan Report SLA ke datacenter, Rack 1a0212 Periode ${prev.bulan} Tahun ${prev.tahun}`,
+        body: templateBody, // Sekarang body terisi otomatis!
       }));
     }
   }, [formData.bulan, formData.tahun]);
@@ -113,7 +131,7 @@ export default function EmailPage() {
     });
 
     if (res.ok) {
-      loadData(); 
+      loadData();
     } else {
       alert("Gagal menghapus");
     }
@@ -140,8 +158,8 @@ export default function EmailPage() {
             <form onSubmit={handleSubmit} className="space-y-3">
               <div>
                 <label className="text-xs font-bold text-slate-500 ">
-                  Kirim Ke (Jika penerima lebih dari 1, pisahkan
-                  dengan koma). Contoh: hilmy@ainosi.com, nadia@ainosi.com
+                  Kirim Ke (Jika penerima lebih dari 1, pisahkan dengan koma).
+                  Contoh: hilmy@ainosi.com, nadia@ainosi.com
                 </label>
                 <input
                   type="email"
@@ -227,6 +245,21 @@ export default function EmailPage() {
                   value={formData.sendAt}
                   onChange={(e) =>
                     setFormData({ ...formData, sendAt: e.target.value })
+                  }
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-500">
+                  Pratinjau Pesan
+                </label>
+                <textarea
+                  required
+                  rows={6}
+                  className="w-full mt-1 p-2 border rounded text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50"
+                  value={formData.body}
+                  onChange={(e) =>
+                    setFormData({ ...formData, body: e.target.value })
                   }
                 />
               </div>
