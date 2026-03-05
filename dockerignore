@@ -1,9 +1,11 @@
-# Copy of .gitignore with modifications
-.git/
-.gitignore
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# prisma
+/prisma/generated
+/generated
 
 # dependencies
-auth_info_baileys/
+auth_info_baileys
 /node_modules
 /.pnp
 .pnp.*
@@ -43,6 +45,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-Dockerfile*
-generated/
-README.md
+.wa_session
+node_modules
+.next
+.git

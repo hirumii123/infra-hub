@@ -25,6 +25,31 @@ export default function WhatsappPage() {
     tahun: "",
     bulan: "",
   });
+  const [scheduledList, setScheduledList] = useState<{ id: string; chatId: string; message: string; sendAt: number; sendAtFormatted: string }[]>([]);
+
+  const fetchScheduled = useCallback(async () => {
+    try {
+      const res = await fetch("/api/whatsapp/schedule");
+      const data = await res.json();
+      if (data.status === "success") setScheduledList(data.data);
+    } catch {}
+  }, []);
+
+  const cancelSchedule = async (id: string) => {
+    if (!confirm("Batalkan jadwal ini?")) return;
+    try {
+      const res = await fetch("/api/whatsapp/schedule", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      const data = await res.json();
+      if (data.status === "success") {
+        alert("Jadwal dibatalkan!");
+        fetchScheduled();
+      }
+    } catch {}
+  };
 
   useEffect(() => {
     if (formData.bulan && formData.tahun) {
@@ -75,9 +100,13 @@ p. +62 21 290 69 516 | f. +62 21 290 69 516`,
 
   useEffect(() => {
     checkStatus();
-    const interval = setInterval(checkStatus, 2000);
+    fetchScheduled();
+    const interval = setInterval(() => {
+      checkStatus();
+      fetchScheduled();
+    }, 5000);
     return () => clearInterval(interval);
-  }, [checkStatus]);
+  }, [checkStatus, fetchScheduled]);
 
   useEffect(() => {
     if (status !== "connected") return;
@@ -165,7 +194,7 @@ p. +62 21 290 69 516 | f. +62 21 290 69 516`,
         {(status === "disconnected" || status === "error") && !qrCode && (
           <div className="text-gray-500 text-center py-10">
             <div className="animate-pulse">⏳ Menunggu koneksi WhatsApp...</div>
-            <p className="text-xs mt-2 text-gray-400">Klik "Aktifkan WhatsApp" di navbar jika belum</p>
+            <p className="text-xs mt-2 text-gray-400">Klik Aktifkan WhatsApp di navbar jika belum</p>
           </div>
         )}
 
@@ -181,7 +210,7 @@ p. +62 21 290 69 516 | f. +62 21 290 69 516`,
           </div>
         )}
 
-        {status === "connected" && (
+        {(status === "connected" || status === "authenticated") && (
           <div className="text-gray-800 flex flex-col px-6 animate-in fade-in zoom-in">
             <h2 className="text-xl font-bold text-center text-green-600 mb-6">
               ✅ Whatsapp Terhubung!
@@ -284,6 +313,30 @@ p. +62 21 290 69 516 | f. +62 21 290 69 516`,
             >
               {isSending ? <>⏳ Memproses...</> : formData.sendAt ? <>📅 Jadwalkan Pesan</> : <>🚀 Kirim Sekarang</>}
             </button>
+
+            {/* Daftar Jadwal */}
+            {scheduledList.length > 0 && (
+              <div className="mt-6">
+                <h3 className="text-xs font-bold text-slate-500 mb-2">📅 Pesan Terjadwal ({scheduledList.length})</h3>
+                <div className="space-y-2">
+                  {scheduledList.map((s) => (
+                    <div key={s.id} className="bg-blue-50 border border-blue-100 rounded-lg px-3 py-2 flex items-start justify-between gap-2">
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-semibold text-blue-700">⏰ {s.sendAtFormatted}</p>
+                        <p className="text-xs text-gray-500 truncate">→ {s.chatId.replace("@c.us", "").replace("@g.us", " (grup)")}</p>
+                        <p className="text-xs text-gray-400 truncate mt-0.5">{s.message.slice(0, 60)}...</p>
+                      </div>
+                      <button
+                        onClick={() => cancelSchedule(s.id)}
+                        className="text-red-400 hover:text-red-600 text-xs font-bold shrink-0"
+                      >
+                        ✕ Batal
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

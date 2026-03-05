@@ -4,10 +4,10 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-COPY package.json bun.lock  ./
+COPY package*.json ./
 COPY ./prisma/ ./prisma
 COPY ./prisma.config.ts ./
-RUN bun i --frozen-lockfile --no-save
+RUN bun i --no-save --ignore-scripts
 
 FROM base AS builder
 WORKDIR /app
@@ -17,7 +17,7 @@ COPY . .
 ARG DATABASE_URL="postgresql://user:password@localhost:5432/dbname"
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN bun prisma generate && bun run build
+RUN bun --bun prisma generate && bun run build
 
 FROM base AS runner
 WORKDIR /app

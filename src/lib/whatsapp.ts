@@ -25,21 +25,22 @@ export const connectToWhatsApp = async (): Promise<void> => {
   const client = new Client({
     authStrategy: new LocalAuth({ dataPath: ".wa_session" }),
     puppeteer: {
-      executablePath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+      // executablePath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
       headless: true,
       args: [
         "--no-sandbox",
         "--disable-setuid-sandbox",
         "--disable-dev-shm-usage",
-        "--disable-gpu",
+        "--disable-gpu",``
       ],
     },
   });
 
+  //coba diset jadi browser apa saja akan bisa
+
   client.on("qr", async (qr) => {
     console.log("[WA] QR Code diterima, generate image...");
     try {
-      // Convert QR string ke data URL agar bisa ditampilkan di frontend
       global.__wa_qr = await qrcode.toDataURL(qr);
       global.__wa_status = "scanning";
       console.log("[WA] QR Code siap ditampilkan!");
@@ -57,8 +58,9 @@ export const connectToWhatsApp = async (): Promise<void> => {
 
   client.on("authenticated", () => {
     console.log("[WA] Authenticated!");
-    global.__wa_status = "authenticated";
+    global.__wa_status = "connected";
     global.__wa_qr = null;
+    global.__wa_connecting = false;
   });
 
   client.on("auth_failure", (msg) => {
