@@ -7,11 +7,6 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   const now = new Date();
 
-//   console.log("--- DEBUG START ---");
-//   console.log("Host:", process.env.SMTP_HOST);
-//   console.log("User:", process.env.SMTP_USER); 
-//   console.log("Pass Loaded?", process.env.SMTP_PASS ? "YES" : "NO");
-
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: Number(process.env.SMTP_PORT),
@@ -21,8 +16,8 @@ export async function GET() {
       pass: process.env.SMTP_PASS,
     },
     tls: {
-      rejectUnauthorized: false 
-    }
+      rejectUnauthorized: false,
+    },
   });
 
   try {
@@ -34,18 +29,17 @@ export async function GET() {
     });
 
     if (jobs.length === 0) {
-      console.log("Tidak ada antrean.");
+      console.log('Tidak ada antrean.');
       return NextResponse.json({ message: 'Empty queue' });
     }
 
     const results = [];
 
     for (const job of jobs) {
-      console.log(`Mencoba kirim ke: ${job.to}`);
+      console.log(`Mencoba kirim ke: ${job.to}${job.cc ? ` | CC: ${job.cc}` : ''}`);
       try {
         const header = `<p>Yth. Bapak Ibu Tim Harrisma,</p>`;
-        const message = 
-        `<p>
+        const message = `<p>
         Dengan hormat, <br>
         Semoga Bapak/Ibu dalam keadaan baik. <br><br>
         Melalui email ini, kami bermaksud menyampaikan pengajuan terkait LogBook Activity serta SLA Report ke Datacenter, untuk penggunaan Rack 1a0212 Periode ${job.bulan} Tahun ${job.tahun}.
@@ -71,19 +65,21 @@ export async function GET() {
         UGM Samator Building, 10th Floor <br>
         Jl. Dr. Sahardjo no.83 Tebet - Manggarai Jakarta Selatan <br>
         p. +62 21 290 69 516  |   f. +62 21 290 69 516
-        </p>`
+        </p>`;
 
-        const finalBody = header + message ;
+        const finalBody = header + message;
 
         await transporter.sendMail({
           from: `"Infra Team | PT AINO Indonesia" <${process.env.SMTP_USER}>`,
           to: job.to,
+          // Kirim cc hanya jika ada nilainya
+          ...(job.cc ? { cc: job.cc } : {}),
           subject: job.subject,
           html: finalBody,
         });
 
-        console.log(`Sukses kirim ke ${job.to}`);
-        
+        console.log(`Sukses kirim ke ${job.to}${job.cc ? ` | CC: ${job.cc}` : ''}`);
+
         await prisma.emailQueue.update({
           where: { id: job.id },
           data: { status: 'SENT' },
@@ -91,8 +87,8 @@ export async function GET() {
         results.push({ id: job.id, status: 'SENT' });
 
       } catch (err) {
-        console.error("ERROR NODEMAILER:", err); 
-        
+        console.error('ERROR NODEMAILER:', err);
+
         await prisma.emailQueue.update({
           where: { id: job.id },
           data: { status: 'FAILED' },
@@ -104,7 +100,7 @@ export async function GET() {
     return NextResponse.json({ processed: results });
 
   } catch (error) {
-    console.error("Server Error:", error);
+    console.error('Server Error:', error);
     return NextResponse.json({ error: 'Server Error' }, { status: 500 });
   }
 }

@@ -13,6 +13,7 @@ datasource db {
 model EmailQueue {
   id        Int      @id @default(autoincrement())
   to        String
+  cc        String?
   subject   String
   body      String
   bulan     String
