@@ -1067,6 +1067,7 @@ export namespace Prisma {
   export type EmailQueueMinAggregateOutputType = {
     id: number | null
     to: string | null
+    cc: string | null
     subject: string | null
     body: string | null
     bulan: string | null
@@ -1079,6 +1080,7 @@ export namespace Prisma {
   export type EmailQueueMaxAggregateOutputType = {
     id: number | null
     to: string | null
+    cc: string | null
     subject: string | null
     body: string | null
     bulan: string | null
@@ -1091,6 +1093,7 @@ export namespace Prisma {
   export type EmailQueueCountAggregateOutputType = {
     id: number
     to: number
+    cc: number
     subject: number
     body: number
     bulan: number
@@ -1113,6 +1116,7 @@ export namespace Prisma {
   export type EmailQueueMinAggregateInputType = {
     id?: true
     to?: true
+    cc?: true
     subject?: true
     body?: true
     bulan?: true
@@ -1125,6 +1129,7 @@ export namespace Prisma {
   export type EmailQueueMaxAggregateInputType = {
     id?: true
     to?: true
+    cc?: true
     subject?: true
     body?: true
     bulan?: true
@@ -1137,6 +1142,7 @@ export namespace Prisma {
   export type EmailQueueCountAggregateInputType = {
     id?: true
     to?: true
+    cc?: true
     subject?: true
     body?: true
     bulan?: true
@@ -1236,6 +1242,7 @@ export namespace Prisma {
   export type EmailQueueGroupByOutputType = {
     id: number
     to: string
+    cc: string | null
     subject: string
     body: string
     bulan: string
@@ -1267,6 +1274,7 @@ export namespace Prisma {
   export type EmailQueueSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     to?: boolean
+    cc?: boolean
     subject?: boolean
     body?: boolean
     bulan?: boolean
@@ -1279,6 +1287,7 @@ export namespace Prisma {
   export type EmailQueueSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     to?: boolean
+    cc?: boolean
     subject?: boolean
     body?: boolean
     bulan?: boolean
@@ -1291,6 +1300,7 @@ export namespace Prisma {
   export type EmailQueueSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     to?: boolean
+    cc?: boolean
     subject?: boolean
     body?: boolean
     bulan?: boolean
@@ -1303,6 +1313,7 @@ export namespace Prisma {
   export type EmailQueueSelectScalar = {
     id?: boolean
     to?: boolean
+    cc?: boolean
     subject?: boolean
     body?: boolean
     bulan?: boolean
@@ -1312,7 +1323,7 @@ export namespace Prisma {
     createdAt?: boolean
   }
 
-  export type EmailQueueOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "to" | "subject" | "body" | "bulan" | "tahun" | "sendAt" | "status" | "createdAt", ExtArgs["result"]["emailQueue"]>
+  export type EmailQueueOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "to" | "cc" | "subject" | "body" | "bulan" | "tahun" | "sendAt" | "status" | "createdAt", ExtArgs["result"]["emailQueue"]>
 
   export type $EmailQueuePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "EmailQueue"
@@ -1320,6 +1331,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       to: string
+      cc: string | null
       subject: string
       body: string
       bulan: string
@@ -1752,6 +1764,7 @@ export namespace Prisma {
   interface EmailQueueFieldRefs {
     readonly id: FieldRef<"EmailQueue", 'Int'>
     readonly to: FieldRef<"EmailQueue", 'String'>
+    readonly cc: FieldRef<"EmailQueue", 'String'>
     readonly subject: FieldRef<"EmailQueue", 'String'>
     readonly body: FieldRef<"EmailQueue", 'String'>
     readonly bulan: FieldRef<"EmailQueue", 'String'>
@@ -4226,6 +4239,7 @@ export namespace Prisma {
   export const EmailQueueScalarFieldEnum: {
     id: 'id',
     to: 'to',
+    cc: 'cc',
     subject: 'subject',
     body: 'body',
     bulan: 'bulan',
@@ -4356,6 +4370,7 @@ export namespace Prisma {
     NOT?: EmailQueueWhereInput | EmailQueueWhereInput[]
     id?: IntFilter<"EmailQueue"> | number
     to?: StringFilter<"EmailQueue"> | string
+    cc?: StringNullableFilter<"EmailQueue"> | string | null
     subject?: StringFilter<"EmailQueue"> | string
     body?: StringFilter<"EmailQueue"> | string
     bulan?: StringFilter<"EmailQueue"> | string
@@ -4368,6 +4383,7 @@ export namespace Prisma {
   export type EmailQueueOrderByWithRelationInput = {
     id?: SortOrder
     to?: SortOrder
+    cc?: SortOrderInput | SortOrder
     subject?: SortOrder
     body?: SortOrder
     bulan?: SortOrder
@@ -4383,6 +4399,7 @@ export namespace Prisma {
     OR?: EmailQueueWhereInput[]
     NOT?: EmailQueueWhereInput | EmailQueueWhereInput[]
     to?: StringFilter<"EmailQueue"> | string
+    cc?: StringNullableFilter<"EmailQueue"> | string | null
     subject?: StringFilter<"EmailQueue"> | string
     body?: StringFilter<"EmailQueue"> | string
     bulan?: StringFilter<"EmailQueue"> | string
@@ -4395,6 +4412,7 @@ export namespace Prisma {
   export type EmailQueueOrderByWithAggregationInput = {
     id?: SortOrder
     to?: SortOrder
+    cc?: SortOrderInput | SortOrder
     subject?: SortOrder
     body?: SortOrder
     bulan?: SortOrder
@@ -4415,6 +4433,7 @@ export namespace Prisma {
     NOT?: EmailQueueScalarWhereWithAggregatesInput | EmailQueueScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"EmailQueue"> | number
     to?: StringWithAggregatesFilter<"EmailQueue"> | string
+    cc?: StringNullableWithAggregatesFilter<"EmailQueue"> | string | null
     subject?: StringWithAggregatesFilter<"EmailQueue"> | string
     body?: StringWithAggregatesFilter<"EmailQueue"> | string
     bulan?: StringWithAggregatesFilter<"EmailQueue"> | string
@@ -4544,6 +4563,7 @@ export namespace Prisma {
 
   export type EmailQueueCreateInput = {
     to: string
+    cc?: string | null
     subject: string
     body: string
     bulan: string
@@ -4556,6 +4576,7 @@ export namespace Prisma {
   export type EmailQueueUncheckedCreateInput = {
     id?: number
     to: string
+    cc?: string | null
     subject: string
     body: string
     bulan: string
@@ -4567,6 +4588,7 @@ export namespace Prisma {
 
   export type EmailQueueUpdateInput = {
     to?: StringFieldUpdateOperationsInput | string
+    cc?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     bulan?: StringFieldUpdateOperationsInput | string
@@ -4579,6 +4601,7 @@ export namespace Prisma {
   export type EmailQueueUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     to?: StringFieldUpdateOperationsInput | string
+    cc?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     bulan?: StringFieldUpdateOperationsInput | string
@@ -4591,6 +4614,7 @@ export namespace Prisma {
   export type EmailQueueCreateManyInput = {
     id?: number
     to: string
+    cc?: string | null
     subject: string
     body: string
     bulan: string
@@ -4602,6 +4626,7 @@ export namespace Prisma {
 
   export type EmailQueueUpdateManyMutationInput = {
     to?: StringFieldUpdateOperationsInput | string
+    cc?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     bulan?: StringFieldUpdateOperationsInput | string
@@ -4614,6 +4639,7 @@ export namespace Prisma {
   export type EmailQueueUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     to?: StringFieldUpdateOperationsInput | string
+    cc?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     bulan?: StringFieldUpdateOperationsInput | string
@@ -4769,6 +4795,21 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -4780,9 +4821,15 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
+  }
+
   export type EmailQueueCountOrderByAggregateInput = {
     id?: SortOrder
     to?: SortOrder
+    cc?: SortOrder
     subject?: SortOrder
     body?: SortOrder
     bulan?: SortOrder
@@ -4799,6 +4846,7 @@ export namespace Prisma {
   export type EmailQueueMaxOrderByAggregateInput = {
     id?: SortOrder
     to?: SortOrder
+    cc?: SortOrder
     subject?: SortOrder
     body?: SortOrder
     bulan?: SortOrder
@@ -4811,6 +4859,7 @@ export namespace Prisma {
   export type EmailQueueMinOrderByAggregateInput = {
     id?: SortOrder
     to?: SortOrder
+    cc?: SortOrder
     subject?: SortOrder
     body?: SortOrder
     bulan?: SortOrder
@@ -4858,6 +4907,24 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -4870,26 +4937,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
-  export type StringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
   }
 
   export type UserCountOrderByAggregateInput = {
@@ -4925,24 +4972,6 @@ export namespace Prisma {
 
   export type UserSumOrderByAggregateInput = {
     id?: SortOrder
-  }
-
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type WhatsappLogCountOrderByAggregateInput = {
@@ -4984,6 +5013,10 @@ export namespace Prisma {
     set?: string
   }
 
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
   }
@@ -4994,10 +5027,6 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -5023,6 +5052,20 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringFilter<$PrismaModel> | string
+  }
+
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
   export type NestedDateTimeFilter<$PrismaModel = never> = {
@@ -5080,34 +5123,6 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
-  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -5134,6 +5149,20 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
 

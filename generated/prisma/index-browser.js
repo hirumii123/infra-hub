@@ -123,6 +123,7 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 exports.Prisma.EmailQueueScalarFieldEnum = {
   id: 'id',
   to: 'to',
+  cc: 'cc',
   subject: 'subject',
   body: 'body',
   bulan: 'bulan',
