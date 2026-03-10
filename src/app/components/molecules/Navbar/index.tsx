@@ -47,6 +47,7 @@ export const Navbar = () => {
     { href: "/emailPage", label: "Email", icon: "✉" },
     { href: "/whatsappPage", label: "WhatsApp", icon: "📱" },
     { href: "/chatPage", label: "Chat", icon: "💬" },
+    { href: "/reportsPage", label: "Laporan", icon: "📥" },
   ];
 
   // Style tombol berdasarkan status

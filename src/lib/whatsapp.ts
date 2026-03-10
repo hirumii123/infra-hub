@@ -6,16 +6,34 @@ declare global {
   var __wa_status: string;
   var __wa_qr: string | null;
   var __wa_connecting: boolean;
+  var __wa_last_error: number; // timestamp ms terakhir error
 }
 
 global.__wa_client = global.__wa_client ?? null;
 global.__wa_status = global.__wa_status ?? "disconnected";
 global.__wa_qr = global.__wa_qr ?? null;
 global.__wa_connecting = global.__wa_connecting ?? false;
+global.__wa_last_error = global.__wa_last_error ?? 0;
+
+const ERROR_COOLDOWN_MS = 10000; // 10 detik cooldown setelah error
 
 export const connectToWhatsApp = async (): Promise<void> => {
-  if (global.__wa_client || global.__wa_connecting) {
-    console.log("[WA] Sudah ada client atau sedang connecting, skip");
+  // Kalau sedang connecting, skip
+  if (global.__wa_connecting) {
+    console.log("[WA] Sedang connecting, skip");
+    return;
+  }
+
+  // Kalau sudah ada client, skip
+  if (global.__wa_client) {
+    console.log("[WA] Client sudah ada, skip");
+    return;
+  }
+
+  // Cooldown setelah error — jangan langsung retry
+  const timeSinceError = Date.now() - global.__wa_last_error;
+  if (global.__wa_last_error > 0 && timeSinceError < ERROR_COOLDOWN_MS) {
+    console.log(`[WA] Cooldown aktif, tunggu ${Math.ceil((ERROR_COOLDOWN_MS - timeSinceError) / 1000)}s lagi`);
     return;
   }
 
@@ -26,6 +44,7 @@ export const connectToWhatsApp = async (): Promise<void> => {
     authStrategy: new LocalAuth({ dataPath: ".wa_session" }),
     puppeteer: {
       headless: true,
+      executablePath: process.env.CHROME_PATH || undefined,
       args: [
         "--no-sandbox",
         "--disable-setuid-sandbox",
@@ -36,7 +55,7 @@ export const connectToWhatsApp = async (): Promise<void> => {
   });
 
   client.on("qr", async (qr) => {
-    console.log("[WA] QR Code diterima, generate image...");
+    console.log("[WA] QR Code diterima...");
     try {
       global.__wa_qr = await qrcode.toDataURL(qr);
       global.__wa_status = "scanning";
@@ -49,6 +68,7 @@ export const connectToWhatsApp = async (): Promise<void> => {
     global.__wa_status = "connected";
     global.__wa_qr = null;
     global.__wa_connecting = false;
+    global.__wa_last_error = 0;
     console.log("[WA] ✅ WhatsApp Terhubung");
   });
 
@@ -89,6 +109,7 @@ export const connectToWhatsApp = async (): Promise<void> => {
     global.__wa_status = "connected";
     global.__wa_qr = null;
     global.__wa_connecting = false;
+    global.__wa_last_error = 0;
   });
 
   client.on("auth_failure", (msg) => {
@@ -96,6 +117,7 @@ export const connectToWhatsApp = async (): Promise<void> => {
     global.__wa_status = "disconnected";
     global.__wa_client = null;
     global.__wa_connecting = false;
+    global.__wa_last_error = Date.now();
   });
 
   client.on("disconnected", (reason) => {
@@ -109,11 +131,12 @@ export const connectToWhatsApp = async (): Promise<void> => {
 
   try {
     await client.initialize();
-  } catch (err) {
+  } catch (err: any) {
     console.error("[WA] Error initialize:", err);
     global.__wa_connecting = false;
     global.__wa_client = null;
     global.__wa_status = "disconnected";
+    global.__wa_last_error = Date.now(); // set timestamp error
   }
 };
 
@@ -130,21 +153,19 @@ export const sendMessage = async (
 ): Promise<void> => {
   const client = global.__wa_client;
   if (!client) throw new Error("WhatsApp belum terhubung");
-
   const chatId = normalizeToId(number);
-
-  // Langsung pakai sendMessage bawaan — sudah terbukti works via fallback 3
   await client.sendMessage(chatId, message);
 };
 
 export const logoutWhatsApp = async (): Promise<void> => {
   if (global.__wa_client) {
-    await global.__wa_client.logout();
+    try { await global.__wa_client.logout(); } catch {}
     global.__wa_client = null;
   }
   global.__wa_status = "disconnected";
   global.__wa_qr = null;
   global.__wa_connecting = false;
+  global.__wa_last_error = 0;
 };
 
 export const getWAStatus = () => ({
