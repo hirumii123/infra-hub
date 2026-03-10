@@ -40,3 +40,21 @@ model WhatsappLog {
   sendAt    DateTime @default(now()) // Waktu dikirim/dijadwalkan
   createdAt DateTime @default(now())
 }
+
+model VendorReport {
+  id           Int      @id @default(autoincrement())
+  bulan        String
+  tahun        String
+  fileName     String
+  filePath     String
+  emailSubject String
+  receivedAt   DateTime
+  createdAt    DateTime @default(now())
+}
+
+model AppSettings {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+}
