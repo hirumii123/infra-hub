@@ -48,6 +48,8 @@ export const Navbar = () => {
     { href: "/whatsappPage", label: "WhatsApp", icon: "📱" },
     { href: "/chatPage", label: "Chat", icon: "💬" },
     { href: "/reportsPage", label: "Laporan", icon: "📥" },
+    { href: "/settingsPage", label: "Pengaturan", icon: "⚙️" },
+
   ];
 
   // Style tombol berdasarkan status
