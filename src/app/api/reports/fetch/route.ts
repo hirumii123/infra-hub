@@ -7,7 +7,7 @@ import fs from "fs";
 import path from "path";
 import { sendMessage } from "@/lib/whatsapp";
 
-const VENDOR_EMAIL = "adiyatmahilmy2812@gmail.com";
+const VENDOR_EMAIL = "support@harrismaindonesia.com";
 const ALLOWED_EXT = [".pdf", ".xlsx", ".xls", ".png", ".jpg", ".jpeg", ".doc", ".docx"];
 
 function detectBulan(text: string): string {
