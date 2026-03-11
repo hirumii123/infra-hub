@@ -1,9 +1,12 @@
 import { connectToWhatsApp, getWAStatus } from "@/lib/whatsapp";
 import { NextResponse } from "next/server";
+import { startEmailCron } from "@/lib/cron";
+
+// Pastikan cron selalu jalan selama app aktif
+startEmailCron();
 
 export async function GET() {
   try {
-    // Auto-start koneksi WA jika belum ada
     connectToWhatsApp().catch((err) =>
       console.error("WA connect error:", err)
     );
