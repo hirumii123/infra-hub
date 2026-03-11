@@ -47,7 +47,7 @@ export async function GET() {
         Sehubungan dengan hal tersebut, kami memohon kesediaan Bapak/Ibu untuk dapat mengirimkan laporan dimaksud dalam waktu dekat. <br>
         Dokumen laporan tersebut kami perlukan sebagai bagian dari proses evaluasi dan dokumentasi internal. <br>
 
-        <b>Apabila Bapak/Ibu telah mengirimkan laporan tersebut sebelumnya, mohon kiranya pesan ini dapat diabaikan.</b><br>
+        <b>Ini adalah pesan otomatis. Apabila Bapak/Ibu telah mengirimkan laporan tersebut sebelumnya, mohon kiranya pesan ini dapat diabaikan.</b><br>
         Demikian permohonan ini kami sampaikan. <br>
         Atas perhatian, bantuan, dan kerja sama yang baik, kami ucapkan terima kasih. <br><br>
         Hormat kami, <br>
