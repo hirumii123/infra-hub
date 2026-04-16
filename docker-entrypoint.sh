@@ -10,9 +10,12 @@ echo "Cleaning up"
 rm -rf ~/.bun/install/cache
 
 echo "Setting up cron"
-# Jalankan /api/cron setiap menit
-echo "* * * * * wget -q -O- http://localhost:3000/api/cron >> /var/log/cron.log 2>&1" | crontab -
+touch /var/log/cron.log
+chmod 666 /var/log/cron.log
+echo "* * * * * wget -q -O- http://localhost:3000/api/cron >> /var/log/cron.log 2>&1
+" | crontab -
+
 crond -b -l 8
 
 echo "Starting app"
-bun server.js
+exec su-exec next bun server.js

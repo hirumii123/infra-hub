@@ -23,7 +23,7 @@ FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
-RUN apk add --no-cache dcron
+RUN apk add --no-cache dcron su-exec
 
 RUN addgroup -g 1001 -S next && adduser -u 1001 -G next -S next
 
@@ -38,7 +38,8 @@ COPY --chown=next:next --chmod=700 ./docker-entrypoint.sh ./
 
 RUN chown -R next:next /app
 
-USER next
+COPY --chmod=755 ./docker-entrypoint.sh ./
+
 EXPOSE 3000
 ENV PORT=3000 \
     HOSTNAME="0.0.0.0"
