@@ -8,22 +8,47 @@ import path from "path";
 import { sendMessage } from "@/lib/whatsapp";
 
 const VENDOR_EMAIL = "support@harrismaindonesia.com";
-const ALLOWED_EXT = [".pdf", ".xlsx", ".xls", ".png", ".jpg", ".jpeg", ".doc", ".docx"];
+
+const ALLOWED_EXT = [
+  ".pdf",
+  ".xlsx",
+  ".xls",
+  ".png",
+  ".jpg",
+  ".jpeg",
+  ".doc",
+  ".docx",
+];
 
 function detectBulan(text: string): string {
   const bulanMap: Record<string, string> = {
-    januari: "Januari", jan: "Januari",
-    februari: "Februari", feb: "Februari",
-    maret: "Maret", mar: "Maret",
-    april: "April", apr: "April",
-    mei: "Mei", may: "Mei",
-    juni: "Juni", jun: "Juni",
-    juli: "Juli", jul: "Juli",
-    agustus: "Agustus", agu: "Agustus", aug: "Agustus",
-    september: "September", sep: "September",
-    oktober: "Oktober", okt: "Oktober", oct: "Oktober",
-    november: "November", nov: "November",
-    desember: "Desember", des: "Desember", dec: "Desember",
+    januari: "Januari",
+    jan: "Januari",
+    februari: "Februari",
+    feb: "Februari",
+    maret: "Maret",
+    mar: "Maret",
+    april: "April",
+    apr: "April",
+    mei: "Mei",
+    may: "Mei",
+    juni: "Juni",
+    jun: "Juni",
+    juli: "Juli",
+    jul: "Juli",
+    agustus: "Agustus",
+    agu: "Agustus",
+    aug: "Agustus",
+    september: "September",
+    sep: "September",
+    oktober: "Oktober",
+    okt: "Oktober",
+    oct: "Oktober",
+    november: "November",
+    nov: "November",
+    desember: "Desember",
+    des: "Desember",
+    dec: "Desember",
   };
   const lower = text.toLowerCase();
   for (const [key, val] of Object.entries(bulanMap)) {
@@ -38,6 +63,10 @@ function detectTahun(text: string): string {
 }
 
 async function fetchFromImap(): Promise<any[]> {
+  console.log(
+    "[IMAP] Mulai connect ke",
+    process.env.IMAP_HOST || process.env.SMTP_HOST,
+  ); // ← tambah ini
   const uploadDir = path.join(process.cwd(), "public", "reports");
   if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
@@ -57,10 +86,13 @@ async function fetchFromImap(): Promise<any[]> {
       imap.openBox("INBOX", false, (err) => {
         if (err) return reject(err);
 
-        imap.search([["FROM", VENDOR_EMAIL]], async (err, uids) => {
+imap.search(["ALL"], async (err, uids) => {
           if (err) return reject(err);
           console.log("[IMAP] UIDs ditemukan:", uids);
-          if (!uids || uids.length === 0) { imap.end(); return resolve(); }
+          if (!uids || uids.length === 0) {
+            imap.end();
+            return resolve();
+          }
 
           const recent = uids.slice(-20);
           const fetch = imap.fetch(recent, { bodies: "" });
@@ -70,7 +102,9 @@ async function fetchFromImap(): Promise<any[]> {
             const p = new Promise<void>((res) => {
               let rawEmail = "";
               msg.on("body", (stream) => {
-                stream.on("data", (chunk: Buffer) => { rawEmail += chunk.toString(); });
+                stream.on("data", (chunk: Buffer) => {
+                  rawEmail += chunk.toString();
+                });
                 stream.once("end", async () => {
                   try {
                     const parsed = await simpleParser(rawEmail);
@@ -80,7 +114,16 @@ async function fetchFromImap(): Promise<any[]> {
                     const bulan = detectBulan(subject);
                     const tahun = detectTahun(subject);
 
-                    console.log("[IMAP] From:", from, "| Subject:", subject, "| Bulan:", bulan, "| Tahun:", tahun);
+                    console.log(
+                      "[IMAP] From:",
+                      from,
+                      "| Subject:",
+                      subject,
+                      "| Bulan:",
+                      bulan,
+                      "| Tahun:",
+                      tahun,
+                    );
 
                     if (!from.includes(VENDOR_EMAIL)) {
                       console.log("[IMAP] SKIP - bukan dari vendor");
@@ -88,19 +131,25 @@ async function fetchFromImap(): Promise<any[]> {
                     }
 
                     const existing = await prisma.vendorReport.findFirst({
-                      where: { bulan, tahun, emailSubject: subject },
+                      where: {
+                        emailSubject: subject,
+                        receivedAt: parsed.date || undefined,
+                      },
                     });
                     console.log("[IMAP] Duplikat:", !!existing);
 
                     if (existing) return res();
 
                     // Filter attachment yang valid
-                    const validAtts = (parsed.attachments || []).filter(a => {
+                    const validAtts = (parsed.attachments || []).filter((a) => {
                       const ext = path.extname(a.filename || "").toLowerCase();
                       return ALLOWED_EXT.includes(ext);
                     });
 
-                    console.log("[IMAP] Attachments valid:", validAtts.map(a => a.filename));
+                    console.log(
+                      "[IMAP] Attachments valid:",
+                      validAtts.map((a) => a.filename),
+                    );
 
                     if (validAtts.length > 0) {
                       for (const att of validAtts) {
@@ -134,7 +183,10 @@ async function fetchFromImap(): Promise<any[]> {
                         },
                       });
                       newReports.push(report);
-                      console.log("[IMAP] Laporan (tanpa file) disimpan:", report.id);
+                      console.log(
+                        "[IMAP] Laporan (tanpa file) disimpan:",
+                        report.id,
+                      );
                     }
                   } catch (e) {
                     console.error("[IMAP] Parse error:", e);
@@ -146,7 +198,11 @@ async function fetchFromImap(): Promise<any[]> {
             parsePromises.push(p);
           });
 
-          fetch.once("end", async () => { await Promise.all(parsePromises); imap.end(); resolve(); });
+          fetch.once("end", async () => {
+            await Promise.all(parsePromises);
+            imap.end();
+            resolve();
+          });
           fetch.once("error", reject);
         });
       });
@@ -174,10 +230,14 @@ export async function startReportPoller() {
       const newReports = await fetchFromImap();
       if (newReports.length > 0) {
         const settings = await prisma.appSettings.findMany();
-        const adminNumber = settings.find(s => s.key === "admin_wa_number")?.value;
+        const adminNumber = settings.find(
+          (s) => s.key === "admin_wa_number",
+        )?.value;
 
         if (adminNumber && global.__wa_client) {
-          const list = newReports.map(r => `• ${r.bulan} ${r.tahun} — ${r.fileName}`).join("\n");
+          const list = newReports
+            .map((r) => `• ${r.bulan} ${r.tahun} — ${r.fileName}`)
+            .join("\n");
           const msg = `📥 *Laporan Vendor Masuk*\n\n${list}\n\n_${new Date().toLocaleString("id-ID")}_`;
           try {
             await sendMessage(adminNumber, msg);
@@ -195,7 +255,9 @@ export async function startReportPoller() {
     }
 
     const settings = await prisma.appSettings.findMany();
-    const intervalMin = Number(settings.find(s => s.key === "poll_interval_minutes")?.value || 60);
+    const intervalMin = Number(
+      settings.find((s) => s.key === "poll_interval_minutes")?.value || 60,
+    );
     global.__report_poller = setTimeout(run, intervalMin * 60 * 1000);
   };
 
@@ -213,15 +275,21 @@ export async function stopReportPoller() {
 
 // ─── Manual trigger (POST) ────────────────────────────────────────────────────
 export async function POST() {
+  console.log("[FETCH] POST dipanggil");
   try {
+    console.log("[FETCH] Mulai fetchFromImap");
     const newReports = await fetchFromImap();
-
+    console.log("[FETCH] Selesai, laporan baru:", newReports.length);
     if (newReports.length > 0) {
       const settings = await prisma.appSettings.findMany();
-      const adminNumber = settings.find(s => s.key === "admin_wa_number")?.value;
+      const adminNumber = settings.find(
+        (s) => s.key === "admin_wa_number",
+      )?.value;
 
       if (adminNumber && global.__wa_client) {
-        const list = newReports.map((r: any) => `• ${r.bulan} ${r.tahun} — ${r.fileName}`).join("\n");
+        const list = newReports
+          .map((r: any) => `• ${r.bulan} ${r.tahun} — ${r.fileName}`)
+          .join("\n");
         const msg = `📥 *Laporan Vendor Masuk*\n\n${list}\n\n_${new Date().toLocaleString("id-ID")}_`;
         try {
           await sendMessage(adminNumber, msg);
@@ -238,6 +306,9 @@ export async function POST() {
     });
   } catch (error: any) {
     console.error("[REPORTS FETCH] Error:", error);
-    return NextResponse.json({ status: "error", error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { status: "error", error: error.message },
+      { status: 500 },
+    );
   }
 }
