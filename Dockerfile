@@ -23,7 +23,22 @@ FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
-RUN apk add --no-cache dcron su-exec
+
+# --- TAMBAHKAN CHROMIUM DI SINI ---
+RUN apk add --no-cache \
+    dcron \
+    su-exec \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont
+
+# Beritahu Puppeteer lokasi binary Chromium di Alpine
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+# ----------------------------------
 
 RUN addgroup -g 1001 -S next && adduser -u 1001 -G next -S next
 
@@ -34,11 +49,10 @@ COPY --from=builder --chown=next:next /app/.next/static ./.next/static
 COPY --from=builder --chown=next:next /app/prisma ./prisma
 COPY --from=builder --chown=next:next /app/prisma.config.ts ./
 
-COPY --chown=next:next --chmod=700 ./docker-entrypoint.sh ./
+# Perbaikan double copy entrypoint
+COPY --chown=next:next --chmod=755 ./docker-entrypoint.sh ./
 
 RUN chown -R next:next /app
-
-COPY --chmod=755 ./docker-entrypoint.sh ./
 
 EXPOSE 3000
 ENV PORT=3000 \
