@@ -94,6 +94,8 @@ export function startEmailCron() {
 
   runEmailCron();
 
-  global.__email_cron = setInterval(runEmailCron, 60 * 1000);
-  console.log("[CRON] Email cron dimulai, interval 60 detik");
+  const SIX_HOURS = 6 * 60 * 60 * 1000;
+
+  global.__email_cron = setInterval(runEmailCron, SIX_HOURS);
+  console.log("[CRON] Email cron dimulai, interval 6 jam");
 }
